@@ -72,3 +72,38 @@ PV_macrocystis_plant_densities <- #Try it yourself!! (follow above as a guide)
 ggplot(data = PV_macrocystis_stipe_densities ) +
   geom_point(aes(x = factor(SampleYear), y = stipe_density_m2)) +
   theme_classic()
+
+#we can save this plot to our figures folder
+
+PV_macrocystis_year_stipedensity <- ggplot(data = PV_macrocystis_stipe_densities ) +
+  geom_point(aes(x = factor(SampleYear), y = stipe_density_m2)) +
+  theme_classic()
+
+ggsave(PV_macrocystis_year_stipedensity,
+       path = "figures", #what folder should it save into
+       filename = "PV_macrocystis_year_stipedensity.jpg", #the file name and file type to save
+       height = 4, #here and below you edit the dimensions of your plot, this will be useful for your poster!
+       width = 5,
+       units = "in"
+         )
+
+#Take some time to edit the axis labels with variable name and units to make the plot look nicer
+
+############################
+#How does density vary across years by site?
+############################
+
+PV_macrocystis_year_stipedensity_bysite <- ggplot(data = PV_macrocystis_stipe_densities ) +
+  geom_point(aes(x = factor(SampleYear), y = stipe_density_m2)) +
+  facet_wrap(~Site) + #this splits the plot by Site
+  theme_classic()
+
+ggsave(PV_macrocystis_year_stipedensity,
+       path = "figures", #what folder should it save into
+       filename = "PV_macrocystis_year_stipedensity.jpg", #the file name and file type to save
+       height = 4, #here and below you edit the dimensions of your plot, this will be useful for your poster!
+       width = 5,
+       units = "in"
+)
+
+#What other relationships can you explore or plot?

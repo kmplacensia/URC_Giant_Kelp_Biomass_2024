@@ -63,6 +63,22 @@ dat_macrocystis <- CRANE_level_orders(dat_macrocystis, AR_Region = T, AR_Complex
 dat_PV_macrocystis <- dat_macrocystis %>%
   filter(Region == "Palos Verdes")
 
+dat_event.r <- dat_event %>%
+  filter(Region == "Palos Verdes") %>%
+  select(Site, SampleDate, DepthZone, Temperature, Latitude, Longitude) %>%
+  group_by(Site, SampleDate, DepthZone) %>%
+  summarise(Temperature_c = mean(Temperature, na.rm = T),
+            Latitude_d = mean(Latitude, na.rm = T),
+            Longitude_d = mean(Longitude, na.rm = T)) %>%
+  unique()
+
+
+########################
+##Link event info
+########################
+
+dat_PV_macrocystis <- left_join(dat_PV_macrocystis, dat_event.r, by = c("Site","SampleDate","DepthZone"))
+
 ########################
 ##Save this subset as a CSV
 ########################
