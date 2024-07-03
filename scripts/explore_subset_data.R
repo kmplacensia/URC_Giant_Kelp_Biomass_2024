@@ -10,7 +10,7 @@
 #############################
 
 library(tidyverse)
-
+library(lubridate)
 ############################
 #LOAD DATA
 ############################
@@ -29,20 +29,28 @@ summary(dat_PV_macrocystis)
 #What types of sites did they survey?
 unique(dat_PV_macrocystis$DepthZone) #note ARM stands for artificial reefs
 
-#We only want years after installation of Palos Verdes (September of 2020)
+#We only want artificial reef observations, no natural reef at PV
+
 dat_PVR_macrocystis <- dat_PV_macrocystis |>
-  filter(DepthZone == "ARM") #only include sample years after 2020
+  filter(DepthZone == "ARM") #only include depthzones = ARM
 
 ############################
 #Narrow down years?
 ############################
 
 #What years do we have now?
+
 sort(unique(dat_PVR_macrocystis$SampleYear))
 
 #We only want years after installation of Palos Verdes (September of 2020)
-dat_PV_macrocystis_post_construction <-   #Try it yourself!! (follow above as a guide)
 
+dat_PV_macrocystis_post_construction <- dat_PVR_macrocystis |>
+  mutate(SampleDate = dmy(SampleDate)) |>
+  filter(SampleDate >= "2020-11-13")
+
+#####################
+#Filter out data from after September 2020
+#####################
 
 
 ############################
@@ -54,7 +62,7 @@ dat_PV_macrocystis_post_construction <-   #Try it yourself!! (follow above as a 
 #First, stipe densities!
 
 PV_macrocystis_stipe_densities <- dat_PV_macrocystis_post_construction |>
-  group_by(SampleYear, SampleDate,Site) |> #take sum for each site, each sampling day, and each sampling year
+  group_by(SampleYear, SampleDate, Site) |> #take sum for each site, each sampling day, and each sampling year
   filter(BenthicReefSpecies == "Macrocystis pyrifera stipes") |> #limit to stipes only!
   summarise(stipe_density_m2 = sum(Abundance)/120)
 
@@ -64,46 +72,34 @@ View(PV_macrocystis_stipe_densities)
 #Second, plant densities!
 
 
-PV_macrocystis_plant_densities <- #Try it yourself!! (follow above as a guide)
+PV_macrocystis_plant_densities <- dat_PV_macrocystis_post_construction |>
+  group_by(SampleYear, SampleDate, Site) |>
+  filter(BenthicReefSpecies == "Macrocystis pyrifera") |>
+  summarise(plant_density_m2 = sum(Abundance)/120)
+
+#look at code:
+View(PV_macrocystis_plant_densities)
+#Try it yourself!! (follow above as a guide)
+
+
 
 ############################
-#How does density vary across years?
+#How does stipe density vary across years?
 ############################
-ggplot(data = PV_macrocystis_stipe_densities ) +
+ggplot(data = PV_macrocystis_stipe_densities) +
   geom_point(aes(x = factor(SampleYear), y = stipe_density_m2)) +
   theme_classic()
 
-#we can save this plot to our figures folder
+#How does plant density vary across years?
 
-PV_macrocystis_year_stipedensity <- ggplot(data = PV_macrocystis_stipe_densities ) +
-  geom_point(aes(x = factor(SampleYear), y = stipe_density_m2)) +
+ggplot(data = PV_macrocystis_plant_densities) +
+  geom_point(aes(x = factor(SampleYear), y = plant_density_m2)) +
   theme_classic()
 
-ggsave(PV_macrocystis_year_stipedensity,
-       path = "figures", #what folder should it save into
-       filename = "PV_macrocystis_year_stipedensity.jpg", #the file name and file type to save
-       height = 4, #here and below you edit the dimensions of your plot, this will be useful for your poster!
-       width = 5,
-       units = "in"
-         )
+#How does plant density compare to stipe density?
+p_left <- dplyr::left_join(PV_macrocystis_plant_densities, PV_macrocystis_stipe_densities, by = c("SampleYear", "SampleDate", "Site"))
 
-#Take some time to edit the axis labels with variable name and units to make the plot look nicer
+densityvector <-
 
-############################
-#How does density vary across years by site?
-############################
-
-PV_macrocystis_year_stipedensity_bysite <- ggplot(data = PV_macrocystis_stipe_densities ) +
-  geom_point(aes(x = factor(SampleYear), y = stipe_density_m2)) +
-  facet_wrap(~Site) + #this splits the plot by Site
-  theme_classic()
-
-ggsave(PV_macrocystis_year_stipedensity,
-       path = "figures", #what folder should it save into
-       filename = "PV_macrocystis_year_stipedensity.jpg", #the file name and file type to save
-       height = 4, #here and below you edit the dimensions of your plot, this will be useful for your poster!
-       width = 5,
-       units = "in"
-)
-
-#What other relationships can you explore or plot?
+ggplot(p_left, aes(x = Year, y = SampleDate)) +
+  geom_line()
