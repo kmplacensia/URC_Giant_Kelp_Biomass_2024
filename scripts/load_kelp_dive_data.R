@@ -1,5 +1,5 @@
 # CREATION DATE 24 June 2024
-# MODIFIED DATE 24 June 2024
+# MODIFIED DATE 3 July 2024
 
 # AUTHOR: kitchel@oxy.edu
 
@@ -65,11 +65,12 @@ dat_PV_macrocystis <- dat_macrocystis %>%
 
 dat_event.r <- dat_event %>%
   filter(Region == "Palos Verdes") %>%
-  select(Site, SampleDate, DepthZone, Temperature, Latitude, Longitude) %>%
+  select(Site, SampleDate, DepthZone, Temperature, Latitude, Longitude, SurveyDepth) %>%
   group_by(Site, SampleDate, DepthZone) %>%
   summarise(Temperature_c = mean(Temperature, na.rm = T),
             Latitude_d = mean(Latitude, na.rm = T),
-            Longitude_d = mean(Longitude, na.rm = T)) %>%
+            Longitude_d = mean(Longitude, na.rm = T),
+            SurveyDepth_m = mean(SurveyDepth, na.rm = T)) %>%
   unique()
 
 
