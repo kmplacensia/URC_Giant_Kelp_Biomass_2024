@@ -1,5 +1,5 @@
 # CREATION DATE 24 June 2024
-# MODIFIED DATE 24 June 2024
+# MODIFIED DATE 3 July  2024
 
 # AUTHOR: kitchel@oxy.edu & placensia@oxy.edu
 
@@ -48,10 +48,8 @@ dat_PV_macrocystis_post_construction <- dat_PVR_macrocystis |>
   mutate(SampleDate = dmy(SampleDate)) |>
   filter(SampleDate >= "2020-11-13")
 
-#####################
-#Filter out data from after September 2020
-#####################
-
+#save this output as a csv
+write_csv(dat_PV_macrocystis_post_construction, file = file.path("data","dat_PV_macrocystis_post_construction.csv"))
 
 ############################
 #To calculate an overall density for each site and sampling day, we will sum macrocystis stipe count and plant count over 2 transects, and then divide by 120 meters squared (60 m x 2)

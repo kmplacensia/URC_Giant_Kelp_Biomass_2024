@@ -64,7 +64,7 @@ dat_PV_macrocystis <- dat_macrocystis %>%
   filter(Region == "Palos Verdes")
 
 dat_event.r <- dat_event %>%
-  filter(Region == "Palos Verdes") %>%
+  filter(grepl("PVR",Site) == T) %>%
   select(Site, SampleDate, DepthZone, Temperature, Latitude, Longitude, SurveyDepth) %>%
   group_by(Site, SampleDate, DepthZone) %>%
   summarise(Temperature_c = mean(Temperature, na.rm = T),
