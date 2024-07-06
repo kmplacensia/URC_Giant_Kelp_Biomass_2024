@@ -25,7 +25,7 @@ PVR_frond_biomass_model_output <- read_csv(file = file.path("output","PVR_frond_
 Rassweiler_2018_kelpdata <- read_csv(file.path("data","Rassweiler_2018_kelpdata.csv"))
 
 #Import PVR module shapefiles
-reefs_sf <- st_read("~/Dropbox/CA Artificial Reefs Project/GIS/R code/AR Shapefiles/PVR2023_Final_05_JUN_2024.shp")
+reefs_sf <- st_read(file.path("data","module_shapefiles", "PVR2023_Final_05_JUN_2024.shp"))
 
 
 ############################
