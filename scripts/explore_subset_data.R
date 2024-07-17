@@ -84,7 +84,7 @@ view(dat_PV_macrocystis_post_construction)
 
 ##########################
 # Now we want to utilize the filtered PVR data set to look at plant and stipe density.
-# According to University of Southern Florida: Kelp are made of three main partS: blades, stipes, and holdfasts. Blades are like leave of land plants; photosynthetic factories of the kelp, this is where energy from sunlight and nutrients form the water are combined to produce food.
+# According to University of Southern Florida: Kelp are made of three main parts: blades, stipes, and holdfasts. Blades are like leave of land plants; photosynthetic factories of the kelp, this is where energy from sunlight and nutrients from the water are combined to produce food.
 #.... Blades do not complete nutrient transport functions like the stems of plants, instead provide support for the kelp blades.
 # According to North 'Biology of Macrocystis in North America' we can estimate Total biomass in a population by multiplying frond density by the mean wet weight of a frond (i.e. ca 1 kg) (THIS IS THE MAIN GOAL OF DATA CONFIGURATION TO HELP ESTIMATE THE AMOUNT OF CARBON STORED BY GIANT KELP AT EACH MODULE)
 # According to Reed et al. 2009 "Density of fronds provides a much better estimator of FSC ("stsanding biomass - mass associated with holdfasts and reproductive blades") than plants as fronds explained nearly 2.5 times more of the observed variability in FSC than plants (r^2 = 0.70 vs 0.34).
@@ -93,7 +93,7 @@ view(dat_PV_macrocystis_post_construction)
 ##########################
 
 ############################
-#To calculate an overall density for each site and sampling day, we will sum both macrocystis stipe count and plant count over 2 transects (seperately), and then divide by 120 meters squared (60 m x 2)
+#To calculate an overall density for each site and sampling day, we will sum both macrocystis stipe count and plant count over 2 transects (seperately), by dividing stipe count by 120 meters squared (60 m x 2)
 ############################
 
 
@@ -107,7 +107,7 @@ PVR_macrocystis_stipe_densities <- dat_PV_macrocystis_post_construction |>
   summarise(stipe_density_m2 = sum(Abundance)/120)
 
 #take a look!
-View(PVR_macrocystis_stipe_densities)
+PVR_macrocystis_stipe_densities
 # Looks great
 
 
@@ -120,7 +120,7 @@ PVR_macrocystis_plant_densities <- dat_PV_macrocystis_post_construction |>
   summarise(plant_density_m2 = sum(Abundance)/120)
 
 #look at code:
-View(PVR_macrocystis_plant_densities)
+PVR_macrocystis_plant_densities
 
 
 #Try it yourself!! (follow above as a guide)
@@ -132,7 +132,7 @@ View(PVR_macrocystis_plant_densities)
 ############################
 
 
-ggplot(data = PV_macrocystis_stipe_densities) +
+ggplot(data = PVR_macrocystis_stipe_densities) +
   geom_col(aes(x = factor(SampleYear), y = stipe_density_m2)) +
   theme_classic()
 
@@ -141,7 +141,7 @@ ggplot(data = PV_macrocystis_stipe_densities) +
 ############################
 
 
-ggplot(data = PV_macrocystis_plant_densities) +
+ggplot(data = PVR_macrocystis_plant_densities) +
   geom_col(aes(x = factor(SampleYear), y = plant_density_m2)) +
   theme_classic()
 
@@ -212,32 +212,23 @@ ggplot(p_left_df, aes(x = SampleYear, y = mean_stipe)) +
 p_left_df2 <- p_left_long %>%
   group_by(SampleYear, DensityType) %>%
   summarise(mean_density = mean(DensityValue))
+
+custom_colors <- c("#005000", "#009292")
+
 #View new data set that just has mean values of each DensityType
-view(p_left_df2)
-# Looks great
+p_left_df2
 
 # Now I am creating a ggplot that plots mean plant density and mean stipe density per year in side by side bar plots using the geom_col() function to show how plant density and stipe density have changed every year post construction of PVR.
-ggplot(p_left_df2, aes(x = SampleYear, y = mean_density, fill = DensityType)) +
+Average_plant_and_stipe_density_figure <- ggplot(data = p_left_df2, aes(x = SampleYear, y = mean_density, fill = DensityType)) +
   geom_col(position = "dodge") +
   theme_classic() +
-  labs(x = "Year of Sample Collection", y = "Mean Density (#/m^2)") +
-  scale_y_continuous(breaks = seq(0, 3, by = 0.1))
-
-# I want to change the y-axis to include tick marks from 0.
-# working: kelp + scale_y_continuous(; ylim(0.00001, 2.6) +
-
-
-# Want to color with Kelp Forest Color Palette - colors = "#549422", "#3c764f"). I want to add kelp forest colors to both stipe and plant
-
+  ggtitle("Average Plant and Stipe Density on PVR for Fall 2020 - 2023") +
+  labs(x = "Year of Sample Collection during Fall Season", y = "Mean Density (#/m^2)") +
+  scale_y_continuous(breaks = seq(0, 3, by = 0.1)) +
+  scale_fill_manual(values = custom_colors)
 
 # I want to graph plant mean density and stipe density at each module from 2020-2023 ("through time")
 
-# Old plot through time that doesn't really work:
-ggplot(p_left_long) +
-  geom_col(aes(x = SampleYear, y = total_carbon)) +
-  facet_wrap(~Name, nrow = 6) +
-  theme_classic()
-
-
-view(stipe_density_module_year_area)
+#Save figure
+ggsave(Average_plant_and_stipe_density_figure, path = ("figures"), filename = "Average_plant_and_stipe_density_figure.jpg", width = 12, height = 9, units = "in", dpi = 300)
 
