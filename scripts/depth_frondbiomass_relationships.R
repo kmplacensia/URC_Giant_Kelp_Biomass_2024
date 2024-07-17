@@ -171,23 +171,26 @@ kelp_frond_merge_scatterplot2
 
 
 
-# Attempting to add geom = text
+# FIGURE TO USE!
 # #1 geom_text(aes(label = pastel("y =", round(coef(lm(y ~ x, data = PVR_frond_biomass_model_output))[1], 2), "* x +", round(coef(lm(y ~ x, data = PVR_frond_biomass_model_output))[2], 2))), x = 15, y = 50, hjust = 0, parse = TRUE)
 
+legend_data <- (data = single_coordinate)
 
 stop_x <- 18.42
 stop_y <- 1.64
 
 kelp_frond_merge_scatterplot23 <- ggplot(data = kelp_frond_biomass_merge) +
   geom_rect(aes(xmin = PVR_min_depth, xmax = PVR_max_depth, ymin = -Inf, ymax = Inf, fill = "Depth of PVR Surveys (2020 - 2023)"), colour = NA, alpha = 0.05) +
-  geom_vline(xintercept = stop_x, linetype = "dashed", color = "#F69541") +
-  geom_hline(yintercept = stop_y, linetype = "dashed", color = "#F69541") + #add depth range of PVR in background
+  geom_vline(xintercept = 18.42, linetype = "dashed", color = "#F69541") +
+  geom_hline(yintercept = 1.64, linetype = "dashed", color = "#F69541") + #add depth range of PVR in background
   annotate(geom = "text", x = 18, y = 4, label = "Frond biomass (kg) = 0.072 * Depth + 0.320\np-value = 0.000177\nR^2 = 0.0179") +
   geom_point(data = kelp_frond_biomass_merge, aes(x = DEPTH, y = WT_F, color = source), size = 1.5) +
   scale_color_manual(values = c("#549422","#264DFF"), name = "Data Source") +
   labs(x = "Depth (m)", y = "Frond biomass (kg)", color = "Data Source", color = source) +
   geom_smooth(data = kelp_frond_biomass_merge, aes(x = DEPTH, y = WT_F), method = "lm", se = FALSE) +
-  geom_point(aes(x = stop_x, y = stop_y), shape = 8, size = 4, color = "#9E3D22", fill = "yellow") +
+  geom_point(data = single_coordinate, aes(x = DEPTH, y = WT_F), shape = 8, size = 4, color = "#9E3D22", fill = "yellow") +
+  geom_point(data = legend_data, aes(x = DEPTH, y = WT_F, shape = "Average Depth of PVR"), size = 4, color = "#9E3D22", fill = "yellow") + # Manually set shape for the legend
+  scale_shape_manual(name = "Average Depth of PVR Dive Surveys (2020 - 2023)", values = c("Average Depth of PVR" = 8)) +
   scale_y_continuous(breaks = seq(0, 11, by = 0.5)) +
   scale_x_continuous(breaks = seq(0, 25, by = 1)) +
   theme(axis.text = element_text(size = 12),
@@ -200,7 +203,7 @@ kelp_frond_merge_scatterplot23 <- ggplot(data = kelp_frond_biomass_merge) +
 kelp_frond_merge_scatterplot23
 
 
-ggsave(kelp_frond_merge_scatterplot2, path = ("figures"), filename = "kelp_frond_merge_scatterplot2.jpg", width = 20, height = 8, units = "in", dpi = 300)
+ggsave(kelp_frond_merge_scatterplot23, path = ("figures"), filename = "kelp_frond_merge_scatterplot23.jpg", width = 15.8, height = 8, units = "in", dpi = 300)
 
 
 # CHATGPT FIXED CODE
