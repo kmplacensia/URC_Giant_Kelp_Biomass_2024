@@ -22,7 +22,7 @@ dat_PV_macrocystis <- read_csv(file.path("data", "dat_PV_macrocystis.csv"))
 #The dat_PV_macrocystis data set is compiled of all data taken by the VRG when surveying the reefs off of the PV Peninsula from 2016 - Present. The entire data set will allow me to narrow down all data taken of the PVR modules from the very first survey completed in November 2020. According to Williams et al. PVR was initially constructed in May 2020.
 
 #Let's look at it!
-View(dat_PV_macrocystis)
+dat_PV_macrocystis
 
 #Let's view some summary statistics
 summary(dat_PV_macrocystis)
@@ -213,22 +213,58 @@ p_left_df2 <- p_left_long %>%
   group_by(SampleYear, DensityType) %>%
   summarise(mean_density = mean(DensityValue))
 
-custom_colors <- c("#005000", "#009292")
-
 #View new data set that just has mean values of each DensityType
 p_left_df2
 
+
 # Now I am creating a ggplot that plots mean plant density and mean stipe density per year in side by side bar plots using the geom_col() function to show how plant density and stipe density have changed every year post construction of PVR.
-Average_plant_and_stipe_density_figure <- ggplot(data = p_left_df2, aes(x = SampleYear, y = mean_density, fill = DensityType)) +
+# INITIAL COPY DON'T DELETE
+Average_plant_and_stipe_density_figure1 <- ggplot(data = p_left_df2, aes(x = SampleYear, y = mean_density, fill = DensityType)) +
   geom_col(position = "dodge") +
-  theme_classic() +
-  ggtitle("Average Plant and Stipe Density on PVR for Fall 2020 - 2023") +
-  labs(x = "Year of Sample Collection during Fall Season", y = "Mean Density (#/m^2)") +
-  scale_y_continuous(breaks = seq(0, 3, by = 0.1)) +
+  labs(x = "Year of Sample Collection during Fall Season", y = expression("Mean Density (kg/m"^2*")")) +
+  scale_y_continuous(breaks = seq(0, 3, by = 0.1), expand = c(0,0)) +
+  scale_x_continuous(breaks= seq(2020, 2023), expand = c(0,0)) +
+  geom_hline(yintercept = 0, color = "black", linetype = "solid") +
+  geom_vline(xintercept = NULL, color = "black", linetype = "solid") +
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 14, face = "bold"),
+        legend.text = element_text(size = 13),
+        panel.background =element_blank()) +
   scale_fill_manual(values = custom_colors)
+
+
+
+# Adjusting the names of the DensityType: Plant_density_m2 and stipe_density_m2 to Total plant and Total stipe
+
+
+# Adjust plot margins
+
+custom_colors <- c("#005000", "#009292")
+
+p_left_df2$DensityType <- ifelse(p_left_df2$DensityType == "stipe_density_m2", "Total stipe",
+                                 ifelse(p_left_df2$DensityType == "plant_density_m2", "Total plant",
+                                        p_left_df2$DensityType))
+
+Average_plant_and_stipe_density_figure12 <- ggplot(data = p_left_df2, aes(x = SampleYear, y = mean_density, fill = DensityType)) +
+  geom_hline(yintercept = seq(0, 3.1, by = 0.5), color = "lightgrey", linetype = "solid") +  # Add lines at 0.5 intervals
+  geom_hline(yintercept = 0, color = "black", linetype = "solid") +
+  geom_col(position = "dodge") +
+  labs(x = "Year of Sample Collection during Fall Season", y = expression("Mean Density (kg/m"^2*")")) +
+  scale_y_continuous(breaks = seq(0, 3.1, by = 0.1),
+                     labels = function(x) ifelse(x %% 0.5 == 0, as.character(x), ''),
+                     expand = c(0,0)) +
+  scale_x_continuous(breaks= seq(2020, 2023), expand = c(0,0)) +
+  theme(axis.text = element_text(size = 14, color = "black", face = "bold"),
+        axis.title = element_text(size = 15, color = "black",face = "bold"),
+        legend.title = element_text(size = 16),
+        legend.text = element_text(size = 13),
+        panel.background = element_blank(),
+        legend.position = c(0.1, 1),
+        legend.justification = c(0, 1)) +
+  scale_fill_manual(name = "Plant Component", values = custom_colors)
 
 # I want to graph plant mean density and stipe density at each module from 2020-2023 ("through time")
 
 #Save figure
-ggsave(Average_plant_and_stipe_density_figure, path = ("figures"), filename = "Average_plant_and_stipe_density_figure.jpg", width = 12, height = 9, units = "in", dpi = 300)
+ggsave(Average_plant_and_stipe_density_figure12, path = ("figures"), filename = "Average_plant_and_stipe_density_figure12.jpg", width = 9, height = 8, units = "in", dpi = 300)
 
