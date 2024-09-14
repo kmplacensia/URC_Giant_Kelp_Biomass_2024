@@ -31,7 +31,7 @@ summary(dat_PV_macrocystis)
 #Only keep artificial reefs at Palos Verdes
 ############################
 
-# The focus of my research project is to determine how much giant kelp biomass has grown on the PV artificial reef constructed by the VRG from 2020 - 2023, as well as the amount of carbon that has been stored by each module from NPP from 2020 - 2023.
+# The focus of my research project is to determine how much giant kelp biomass has grown on the PV artificial reef constructed by the VRG from 2020 - 2023, as well as the amount of carbon that has been stored by each module as standing biomass from 2020 - 2023.
 # To begin I have to narrow down the data set just to look at all data surveys completed on the PVR AR_Complex.
 
 #What types of sites did they survey?
@@ -161,8 +161,7 @@ head(p_left)
 
 
 # Create data set that is tidy/long instead of wide where we have a column for each of the types of things we measured/recorded in our data. We want each observation/sample date to have both a plant density and stipe density assigned values.
-# AKA reshape data from wide (untidy) to long (tidy).
-# Long data is more clear as it shows how many distinct types of variables we have in the data
+# AKA reshape data from wide (untidy) to long (tidy). Long data is more clear as it shows how many distinct types of variables we have in the data.
 
 # Our goal in comparing plant density and stipe density in p_left is to look at the differences in plant density to stipe density from the entire data set.
 # Use the pivot function to go from wide p_left to long
@@ -214,29 +213,11 @@ p_left_df2 <- p_left_long %>%
   summarise(mean_density = mean(DensityValue))
 
 #View new data set that just has mean values of each DensityType
-p_left_df2
+view(p_left_df2)
 
 
 # Now I am creating a ggplot that plots mean plant density and mean stipe density per year in side by side bar plots using the geom_col() function to show how plant density and stipe density have changed every year post construction of PVR.
-# INITIAL COPY DON'T DELETE
-Average_plant_and_stipe_density_figure1 <- ggplot(data = p_left_df2, aes(x = SampleYear, y = mean_density, fill = DensityType)) +
-  geom_col(position = "dodge") +
-  labs(x = "Year of Sample Collection during Fall Season", y = expression("Mean Density (kg/m"^2*")")) +
-  scale_y_continuous(breaks = seq(0, 3, by = 0.1), expand = c(0,0)) +
-  scale_x_continuous(breaks= seq(2020, 2023), expand = c(0,0)) +
-  geom_hline(yintercept = 0, color = "black", linetype = "solid") +
-  geom_vline(xintercept = NULL, color = "black", linetype = "solid") +
-  theme(axis.text = element_text(size = 12),
-        axis.title = element_text(size = 14, face = "bold"),
-        legend.text = element_text(size = 13),
-        panel.background =element_blank()) +
-  scale_fill_manual(values = custom_colors)
-
-
-
 # Adjusting the names of the DensityType: Plant_density_m2 and stipe_density_m2 to Total plant and Total stipe
-
-
 # Adjust plot margins
 
 custom_colors <- c("#005000", "#009292")
@@ -264,6 +245,7 @@ Average_plant_and_stipe_density_figure12 <- ggplot(data = p_left_df2, aes(x = Sa
   scale_fill_manual(name = "Plant Component", values = custom_colors)
 
 # I want to graph plant mean density and stipe density at each module from 2020-2023 ("through time")
+print(Average_plant_and_stipe_density_figure12)
 
 #Save figure
 ggsave(Average_plant_and_stipe_density_figure12, path = ("figures"), filename = "Average_plant_and_stipe_density_figure12.jpg", width = 9, height = 8, units = "in", dpi = 300)
