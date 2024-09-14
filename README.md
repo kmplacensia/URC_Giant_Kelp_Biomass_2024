@@ -20,4 +20,8 @@ In this repository there are:
 - Scripts - "depth_frondbiomass_relationships.R", "explore_subset_data.R", "load_kelp_data.R", and "real_calculate_biomass_carbon_by_module.R"
 - Figures - ggplot figures after estimating the total dry biomass from all the giant kelp stipes accounted for on PVR, and the estimated carbon content from dry standing biomass
 - data - contains raw data from other sources
-- 
+
+  In what order should data be run?
+  Data should be run in the order of "explore_subset_data.R", then "depth_frond_biomass_relationships.R", and "real_calculate_biomass_carbon_bymodule.R"
+
+  
