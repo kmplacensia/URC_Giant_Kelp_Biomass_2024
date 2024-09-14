@@ -20,7 +20,7 @@ dat_PV_macrocystis_post_construction <- read_csv(file = file.path("data","dat_PV
 dat_PV_macrocystis_post_construction
 
 
-#North et al. 1958 conducted a study on M. pyrifera to determine how much giant kelp was present in the Papalote Bed during different months of the year. Due to weathering kelp beds were not present in October and December of 1957, but thick kelp beds were observed from a campsite on shore in May 1957. Then again in May of 1958 aerial surveys revealed that the bed was once again existent. Between May and July 1957 juvenile plants appeared and better growing conditions allowed for the formation of a canopy/
+#North et al. 1958 conducted a study on M. pyrifera to determine how much giant kelp was present in the Papalote Bed during different months of the year. Due to changes in weather kelp beds were not present in October and December of 1957, but thick kelp beds were observed from a campsite on shore in May 1957. Then, in May of 1958 aerial surveys revealed that the kelp bed was once again present. Between May and July 1957 juvenile plants appeared and better growing conditions allowed for the formation of a canopy.
 # The North team collected data on giant kelp juveniles at depths from 20 to 25 m, as well as from depths from 4 to 25 m. North 1958 estimated the average weight of a stipes plus attached pneumatocysts and blades for depths of around 18 m; around the depth at which the VRG completed ARM surveys. The data set by North provides the mass of all weighed kelp fronds from this experiment.
 #This data set will provide us with the depth and mass of each sampled and collected frond from the North 1958 experiment from June, July, and August of 1958.
 
@@ -68,19 +68,22 @@ ggplotNorth <- ggplot() +
   theme_classic() +
   scale_y_continuous(breaks = seq(0, 3, by = 0.1))
 
-
-ggsave(ggplotNorth, path = file.path("figures"), filename = "ggplotNorth.jpg", height = 10, width = 10, units = "in")
-
 #This ggplot shows the frond biomass at which North collected a frond between 15-22 m.
 
+print(ggplotNorth)
+
+#Save this plot of the North 1958 data set.
+ggsave(ggplotNorth, path = file.path("figures"), filename = "ggplotNorth.jpg", height = 10, width = 10, units = "in")
+
 ############################
-#Rassweiler 2018 predictions for this depth range
+#Now we are going to focus on looking at the Rassweiler 2018 predictions for this depth range
 ############################
 
 Rassweiler_2018_kelpdata.r <- Rassweiler_2018_kelpdata |>
   filter(complete.cases(DEPTH) & complete.cases(WT_WC) & complete.cases(WT_C)) #only include rows with data for depth, water column weight, and canopy weight
 
 # By finding the sum of column weight and canopy weight we can determine the weight of the entire giant kelp frond.
+
 # Make new column summing water column weight and canopy weight
 Rassweiler_2018_kelpdata.r <- Rassweiler_2018_kelpdata.r |>
   mutate(WT_F = WT_WC + WT_C) |>
@@ -107,14 +110,14 @@ PVR_min_depth * 0.117 + 0.010
 #minimum depth PVR * coefficient + intercept
 PVR_max_depth * 0.117 + 0.010
 
-#How does Rasweiller data overlap with North data?
+#Now we want to focus on how  Rasweiller's data overlap with the North data
 
 #reduce Rasweiller data to depth and biomass
 
 # Only look at depth and biomass because those are the two variables we want to compare with North's data
 Rassweiler_2018_depth_biomass <- Rassweiler_2018_kelpdata.r |>
   select(DEPTH, WT_F) |>
-  mutate(source = "Rassweiller 2018") #add new column identifying data source
+  mutate(source = "Rassweiller et al. 2018") #add new column identifying data source
 view(Rassweiler_2018_depth_biomass)
 
 #add new column to North data as well
@@ -143,50 +146,48 @@ kelp_frond_merge_scatterplot <- ggplot() +
   geom_smooth(data = kelp_frond_biomass_merge, aes(x = DEPTH, y = WT_F), method = "lm") +
   theme_classic()
 
-
+print(kelp_frond_merge_scatterplot)
 # The light yellow area shows the minimum and maximum depths at which the VRG completes PVR surveys. Having this defined area helps determine the points at which we can calculate frond biomass values
 # The plum points identify all the data taken by North (WT_F ~ DEPTH). The skyblue points show the points at which Rassweiler collected data.
-#this figure may be helpful for the poster, save it to figures folder
+# Save this original figure to the figures folder
 ggsave(kelp_frond_merge_scatterplot, path = file.path("figures"), filename = "kelp_frond_merge_scatterplot.jpg", height = 10, width = 10, units = "in")
 
-stop_x <- 18.42
-stop_y <- 1.64
 
-#NOT USING THIS CODE: I recommend playing around with this figure to add dates of papers to legend, and make points and figure labels larger
-kelp_frond_merge_scatterplot2 <- ggplot(data = kelp_frond_biomass_merge) +
-  ggtitle("Linear Regression Model: Estimating Macrocystis pyrfiera Biomass per m^2 based on Depth") +
-  geom_rect(aes(xmin = PVR_min_depth, xmax = PVR_max_depth, ymin = -Inf, ymax = Inf, fill = "Depth of PVR Surveys (2020 - 2023)"), colour = NA, alpha = 0.05) + #add depth range of PVR in background
-  geom_point(data = kelp_frond_biomass_merge, aes(x = DEPTH, y = WT_F, color = source), size = 1.5) +
-  scale_color_manual(values = c("#549422","#264DFF")) +
-  labs(x = "Depth (m)", y = "Frond biomass (kg)", color = "Data Source") +
-  geom_smooth(data = kelp_frond_biomass_merge, aes(x = DEPTH, y = WT_F), method = "lm") +
-  geom_vline(xintercept = stop_x, linetype = "dashed", color = "#F69541") +
-  geom_hline(yintercept = stop_y, linetype = "dashed", color = "#F69541") +
-  geom_point(aes(x = stop_x, y = stop_y), shape = 8, size = 4, color = "#9E3D22", fill = "yellow") +
-  scale_y_continuous(breaks = seq(0, 11, by = 0.5)) +
-  scale_x_continuous(breaks = seq(0, 25, by = 1)) +
-  theme(axis.text = element_text(size = 12),
-        axis.title = element_text(size = 14, face = "bold"),
-        legend.text = element_text(size = 13)) +
-  scale_fill_manual('Depth Range',
-                    values = '#B6DBFF',
-                    guide = guide_legend(override.aes = list(alpha = 1)))
-
-kelp_frond_merge_scatterplot2
-
-# FIGURE TO USE!
-# geom_text(aes(label = pastel("y =", round(coef(lm(y ~ x, data = PVR_frond_biomass_model_output))[1], 2), "* x +", round(coef(lm(y ~ x, data = PVR_frond_biomass_model_output))[2], 2))), x = 15, y = 50, hjust = 0, parse = TRUE)
+#The original kelp_frond_merge_scatterplot is good, but with additional edits this figure is much more understandable and fun to look at.
 #Need to add geom_point star to legend: * = average weight of giant kelp (1.64 kg/m^2) at mean depth of all PVR surveys (18.42 m)
-# Giant kelp frond weighs about 1.64 kg
 legend_data <- (data = single_coordinate)
 
 stop_x <- 18.42
 stop_y <- 1.64
 
+kelp_frond_merge_scatterplot2K <- ggplot(data = kelp_frond_biomass_merge) +
+  geom_rect(aes(xmin = PVR_min_depth, xmax = PVR_max_depth, ymin = -Inf, ymax = Inf, fill = "Depth of PVR Surveys (2020 - 2023)"), colour = NA, alpha = 0.05) + #add depth range of PVR in background
+  geom_point(data = kelp_frond_biomass_merge, aes(x = DEPTH, y = WT_F, color = source), size = 1.5) +
+  scale_color_manual(values = c("#005000", "#009292")) +
+  labs(x = "Depth (m)", y = "Frond biomass (kg)", color = "Data Source") +
+  geom_smooth(data = kelp_frond_biomass_merge, aes(x = DEPTH, y = WT_F), method = "lm") +
+  geom_vline(xintercept = stop_x, linetype = "dashed", color = "#F69541") +
+  geom_hline(yintercept = stop_y, linetype = "dashed", color = "#F69541") +
+  geom_point(aes(x = stop_x, y = stop_y), shape = 8, size = 4, color = "#9E3D22", fill = "yellow") +
+  scale_y_continuous(breaks = seq(0, 9.5, by = 0.5), labels = function(x) ifelse(x %% 1 == 0, as.character(x), '')) +
+  scale_x_continuous(breaks = seq(0, 24, by = 1), labels = function(x) ifelse(x %% 2 == 0, as.character(x), '')) +
+  theme(axis.text = element_text(size = 12, face = "bold", color = "black"),
+        axis.title = element_text(size = 14, face = "bold"),
+        legend.text = element_text(size = 13),
+        legend.position = "center",
+        panel.background = element_blank()) +
+  scale_fill_manual('Depth Range',
+                    values = '#B6DBFF',
+                    guide = guide_legend(override.aes = list(alpha = 1)))
+
+kelp_frond_merge_scatterplot2K
+
+ggsave(kelp_frond_merge_scatterplot2K, path = ("figures"), filename = "kelp_frond_merge_scatterplot2K.jpg", width = 11, height = 3.4, units = "in", dpi = 300)
+
+
+# Similar ggplot as kelp_frond_merge_scatterplot2K, except that this plot contains the legend (including "Depth Range", and "Data Source")....however, Katie could not get this code to work##
 kelp_frond_merge_scatterplot231 <- ggplot(data = kelp_frond_biomass_merge) +
   geom_rect(aes(xmin = PVR_min_depth, xmax = PVR_max_depth, ymin = -Inf, ymax = Inf, fill = "Depth of PVR Surveys (2020 - 2023)"), colour = NA, alpha = 0.05) +
-  geom_hline(yintercept = 0, color = "black", linetype = "solid") +  # Adding y-axis lines
-  geom_vline(xintercept = 0, color = "black", linetype = "solid") +  # Adding x-axis lines
   geom_vline(xintercept = 18.42, linetype = "dashed", color = "#F69541") +
   geom_hline(yintercept = 1.64, linetype = "dashed", color = "#F69541") + #add depth range of PVR in background
   annotate(geom = "text", x = 18, y = 3, label = "Frond biomass (kg) = 0.072 * Depth + 0.320\np-value = 0.000177\nR^2 = 0.0179") +
@@ -197,31 +198,25 @@ kelp_frond_merge_scatterplot231 <- ggplot(data = kelp_frond_biomass_merge) +
   geom_point(data = single_coordinate, aes(x = DEPTH, y = WT_F), shape = 8, size = 4, color = "#9E3D22", fill = "yellow") +
   geom_point(data = legend_data, aes(x = DEPTH, y = WT_F, shape = "Average Depth of PVR Modules"), size = 4, color = "#9E3D22", fill = "yellow") + # Manually set shape for the legend
   scale_shape_manual(name = " ", values = c("Average Depth of PVR Modules" = 8)) +
-  scale_y_continuous(breaks = seq(0, 12.0, by = 1),
-                     labels = function(x) ifelse(x %% 1.0 == 0, as.character(x), ''),
-                     expand = c(0,0))+
-  scale_x_continuous(breaks = seq(0, 25, by = 1), expand = c(0, 0), limits = c(0, 25)) +
+  scale_y_continuous(limits = c(0, 10), breaks = seq(0, 10, by = 1), expand = c(0,0)) +
+  scale_x_continuous(breaks = seq(4, 25, by = 1), expand = c(0, 0), limits = c(0, 25)) +
   theme(axis.text = element_text(size = 14),
         axis.title = element_text(size = 14, face = "bold"),
         legend.text = element_text(size = 13),
-        panel.background = element_blank())+
+        panel.background = element_blank(),
+        axis.text.y = element_text(margin = margin(r = 0)),
+                                   axis.line.y = element_line(color = "black", size = 0.5),
+        axis.text.x = element_text(margin = margin(r = 0)),
+        axis.line.x = element_line(color = "black", size = 0.5)) +
   scale_fill_manual('Depth Range',
                     values = '#B6DBFF',
                     guide = guide_legend(override.aes = list(alpha = 1)))
 
-
-custom_colors <- c("#005000", "#009292")
-
-
 ggsave(kelp_frond_merge_scatterplot231, path = ("figures"), filename = "kelp_frond_merge_scatterplot231.jpg", width = 11, height = 3, units = "in", dpi = 400)
 
-# Trying to move legend
-legend.position = c(0.1, 1)
-legend.justification = c(0, 1)
+#####
 
 
-#legend.position = c(0.3, 0.95),
-#legend.justification = c(0, 1)
 # This figure shows us the intersection point of the linear model formula/regression line that predicts the "WT_F" (frond wet weight) at the average depth.
 # The geom_smooth line provides us with a way to predict the average wet weight of a kelp frond at a specific depth. The average depth of PVR surveys was 18.42 m. We see that at the intersection point of the lm formula, the average frond biomass of giant kelp is 1.64 kg.
 
@@ -229,11 +224,11 @@ PVR_linear_plot <- ggplot(data = kelp_frond_biomass_merge) +
   geom_smooth(data = kelp_frond_biomass_merge, aes(x = DEPTH, y = WT_F), method = "lm") +
   theme_classic()
 
-#you can also make other adjustments to your liking!
 #It could even be cool to include the linear model you build below on the plot as well as text
 #You'd want to share model structure (y = mx+b with actual values for m and b, the R^2 value, and the p value)
 
 #let's build another linear model (predicting weight of frond by depth)
+
 # This new linear model will provide us with a formula to predict kelp biomass within a specific depth in the PVR data set.
 lm_mod_full <- lm(WT_F ~ DEPTH, data = kelp_frond_biomass_merge)
 
@@ -263,5 +258,3 @@ PVR_frond_biomass_model_output <- data.frame(weight_component = c("min","mean","
                                                                                                      PVR_max_depth * 0.072 + 0.320))
 
 write_csv(PVR_frond_biomass_model_output, file = file.path("output","PVR_frond_biomass_model_output.csv"))
-
-
