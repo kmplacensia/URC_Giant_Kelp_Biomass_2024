@@ -10,7 +10,7 @@ Where do data come from?
 We used multiple data sources to create this script including:
 1) Andrew Rassweilers 2018 data set including the depth, and wet weight of giant kelp samples collected in Souther Florida; obtained csv file directly from Professor Andrew Rassweiler at Florida State University 
 2) A historical data set from North 1958 that provided us with giant kelp wet weight at depths from 0-18m collected in Southern California and Baja California - Occidental Library inner personal loan provided for free
-3) Carbon Hydrogen Nitrogen Elemental Analysis Results obtained from collecting giant kelp blades at the PVR sites in July 2024, which allowed us to estimate the average carbon content of a single giant kelp stipe - Results and test conducted the University of California Santa Barbara
+3) "CHN & Site real.xlsx" - Carbon Hydrogen Nitrogen Elemental Analysis Results obtained from collecting giant kelp blades at the PVR sites in July 2024, which allowed us to estimate the average carbon content of a single giant kelp stipe - Results and test conducted the University of California Santa Barbara
 4) VRG Historical dive data from 2020-2023 - describing the number of giant kelp plants and stipes accounted for on 2 30-m^2 transects at 18 artifical reef modules - obtained directly from a master file at the Vantuna Research Group Lab
 5) VRG shape file - describing the geographic location of each PVR module - obtained directly from a master file at the Vantuna Research Group Lab
 
