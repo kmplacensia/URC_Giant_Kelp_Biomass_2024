@@ -32,7 +32,6 @@ Rassweiler_2018_kelpdata <- read_csv(file.path("data","Rassweiler_2018_kelpdata.
 #Import PVR module shapefiles... The shape file provides figures of PVR on a map plot.
 reefs_sf <- st_read(file.path("data","module_shapefiles", "PVR2023_Final_05_JUN_2024.shp"))
 
-plot(reefs_sf)
 ############################
 #Reduce VRG data to just stipe density per module per year
 ############################
@@ -172,17 +171,6 @@ stipe_density_sum_total_carbon_per_year2 <- stipe_density_module_year_areaucsb |
 stipe_density_mean_total_carbon_per_year_UCSB <- stipe_density_module_year_areaucsb |>
   mutate(mean_total_carbon = (mean(total_carbon)/SampleYear))
 
-# Addiitonal piece Zoë added: |> dplyr::select(SampleYear, mean_total_carbon, everything())
-
-###########################
-#Visualize biomass through time
-###########################
-#Original code by Zoë - not be replicated, just for help when tracing steps
-ggplot(stipe_density_module_year_area) +
-  geom_col(aes(x = SampleYear, y = total_frond_biomass)) +
-  facet_wrap(~Name, nrow = 6) +
-  theme_classic()
-
 ###########################
 #Visualize carbon through time
 ###########################
@@ -256,6 +244,7 @@ stipe_density_module_year_2023 <- stipe_density_module_year_areaucsb %>%
 stipe_density_module_year_area_all_years <- left_join(stipe_density_module_year_area_all_years, stipe_density_module_year_2023, by = "Name")
 
 stipe_density_module_year_area_all_years
+
 
 plot(stipe_density_module_year_area_all_years, max.plot = 11)
 
@@ -397,7 +386,7 @@ final_plot <- plot_grid(
   ncol = 2, nrow = 1,
   rel_widths = c(9, 1)) # Adjust relative heights as needed
 
-
+#Save all plots and final_plot
 ggsave(final_plot, path = ("figures"), filename = "final_plot.jpg", width = plot_dimensions$width, height = plot_dimensions$height, units = "in", dpi = 300)
 
 ggsave(map_plot_2020, path = ("figures"), filename = "map_all_plots_2020.jpg", width = 6.3, height = 3, units = "in", dpi = 300)
