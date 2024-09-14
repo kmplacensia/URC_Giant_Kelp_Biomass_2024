@@ -18,8 +18,7 @@ We used multiple data sources to create this script including:
 What's in this repository?
 In this repository there are:
 - Scripts - "depth_frondbiomass_relationships.R", "explore_subset_data.R", "load_kelp_data.R", and "real_calculate_biomass_carbon_by_module.R"
-- All files not in the "outputs" and "scripts" folders are created from all three scripts
-  > figures are made from ggplots, working to estimate the total dry biomass from all the giant kelp stipes accounted for on PVR, and the estimated carbon content from dry standing biomass
+- Figures are all the files not in the "outputs" and "scripts" folders  > figures are made from ggplots, working to estimate the total dry biomass from all the giant kelp stipes counted for on PVR, and the estimated carbon content from total dry standing biomass of giant kelp on PVR
 - data - contains raw data from other sources
 
 In what order should data be run?
