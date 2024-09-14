@@ -8,11 +8,11 @@ Please contact Kaitlyn Placensia and Zoe Kitchel with questions about this proje
 
 Where do data come from?
 We used multiple data sources to create this script including:
-1) Andrew Rassweilers 2018 data set including the depth, and wet weight of giant kelp samples collected in Souther Florida
-2) A historical data set from North 1958 that provided us with giant kelp wet weight at depths from 0-18m collected in Southern California and Baja California
-3) Carbon Hydrogen Nitrogen Elemental Analysis Results obtained from collecting giant kelp blades at the PVR sites in July 2024, which allowed us to estimate the average carbon content of a single giant kelp stipe
-4) VRG Historical dive data from 2020-2023 - describing the number of giant kelp plants and stipes accounted for on 2 30-m^2 transects at 18 artifical reef modules
-5) VRG shape file - describing the geographic location of each PVR module
+1) Andrew Rassweilers 2018 data set including the depth, and wet weight of giant kelp samples collected in Souther Florida; obtained csv file directly from Professor Andrew Rassweiler at Florida State University 
+2) A historical data set from North 1958 that provided us with giant kelp wet weight at depths from 0-18m collected in Southern California and Baja California - Occidental Library inner personal loan provided for free
+3) Carbon Hydrogen Nitrogen Elemental Analysis Results obtained from collecting giant kelp blades at the PVR sites in July 2024, which allowed us to estimate the average carbon content of a single giant kelp stipe - Results and test conducted the University of California Santa Barbara
+4) VRG Historical dive data from 2020-2023 - describing the number of giant kelp plants and stipes accounted for on 2 30-m^2 transects at 18 artifical reef modules - obtained directly from a master file at the Vantuna Research Group Lab
+5) VRG shape file - describing the geographic location of each PVR module - obtained directly from a master file at the Vantuna Research Group Lab
 
 
 What's in this repository?
@@ -21,7 +21,7 @@ In this repository there are:
 - Figures - ggplot figures after estimating the total dry biomass from all the giant kelp stipes accounted for on PVR, and the estimated carbon content from dry standing biomass
 - data - contains raw data from other sources
 
-  In what order should data be run?
+In what order should data be run?
   Data should be run in the order of "explore_subset_data.R", then "depth_frond_biomass_relationships.R", and "real_calculate_biomass_carbon_bymodule.R"
 
   
