@@ -6,7 +6,7 @@ Abstract: As a primary producer, giant kelp (Macrocystis pyrifera) helps mitigat
 
 Please contact Kaitlyn Placensia and Zoe Kitchel with questions about this project. The results are partially reproducible from the scripts and data files.
 
-Where do data come from?
+##Where do data come from?
 We used multiple data sources to create this script including:
 1) Andrew Rassweilers 2018 
 What's in this repository?
