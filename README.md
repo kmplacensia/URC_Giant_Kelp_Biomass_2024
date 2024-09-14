@@ -6,8 +6,18 @@ Abstract: As a primary producer, giant kelp (Macrocystis pyrifera) helps mitigat
 
 Please contact Kaitlyn Placensia and Zoe Kitchel with questions about this project. The results are partially reproducible from the scripts and data files.
 
-##Where do data come from?
+Where do data come from?
 We used multiple data sources to create this script including:
-1) Andrew Rassweilers 2018 
-What's in this repository?
+1) Andrew Rassweilers 2018 data set including the depth, and wet weight of giant kelp samples collected in Souther Florida
+2) A historical data set from North 1958 that provided us with giant kelp wet weight at depths from 0-18m collected in Southern California and Baja California
+3) Carbon Hydrogen Nitrogen Elemental Analysis Results obtained from collecting giant kelp blades at the PVR sites in July 2024, which allowed us to estimate the average carbon content of a single giant kelp stipe
+4) VRG Historical dive data from 2020-2023 - describing the number of giant kelp plants and stipes accounted for on 2 30-m^2 transects at 18 artifical reef modules
+5) VRG shape file - describing the geographic location of each PVR module
 
+
+What's in this repository?
+In this repository there are:
+- Scripts - "depth_frondbiomass_relationships.R", "explore_subset_data.R", "load_kelp_data.R", and "real_calculate_biomass_carbon_by_module.R"
+- Figures - ggplot figures after estimating the total dry biomass from all the giant kelp stipes accounted for on PVR, and the estimated carbon content from dry standing biomass
+- data - contains raw data from other sources
+- 
