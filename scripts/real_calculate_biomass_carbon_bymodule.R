@@ -14,12 +14,13 @@ library(sf)
 library(terra)
 library(ggplot2)
 library(dplyr)
+library(readxl)
 ############################
 #LOAD DATA
 ############################
 #open data subset of PVR only
 dat_PV_macrocystis_post_construction <- read_csv(file = file.path("data","dat_PV_macrocystis_post_construction.csv"))
-
+view(dat_PV_macrocystis_post_construction)
 #import data frame of min, max, mean kg per frond from Rassweiler/North model (depth_Frondbiomass_relationships.R)
 PVR_frond_biomass_model_output <- read_csv(file = file.path("output","PVR_frond_biomass_model_output.csv"))
 
@@ -142,19 +143,8 @@ stipe_density_mean_total_carbon_per_year1 <- stipe_density_module_year_area |>
 #Katie, from UCSB CHN results; CHN C-content values (blades contain 31.4% C)
 #####################
 #Open CHN Analysis Results from UCSB
-install.packages("readxl")
 
-library(readxl)
-
-CHN_UCSB_results_July_2024 <- read_excel(file = file.path("data", "CHN_Site_real"))
-
-gfg_data=read_excel('CHN_Site_real.xlsx')
-
-gfg_data
-
-CHN_Site_real <- file_path <- "path/to"
-
-dat_PV_macrocystis_post_construction <- read_csv(file = file.path("data","dat_PV_macrocystis_post_construction.csv"))
+CHN_Site_real <- read_excel(file = file.path("data", "CHN & Site real.xlsx"))
 
 
 # Percent carbon of blades from UCSB CHN Analysis is:
@@ -187,7 +177,7 @@ stipe_density_mean_total_carbon_per_year_UCSB <- stipe_density_module_year_areau
 ###########################
 #Visualize biomass through time
 ###########################
-#Original code by Zoë
+#Original code by Zoë - not be replicated, just for help when tracing steps
 ggplot(stipe_density_module_year_area) +
   geom_col(aes(x = SampleYear, y = total_frond_biomass)) +
   facet_wrap(~Name, nrow = 6) +
@@ -213,16 +203,6 @@ map_with_carbon <- ggplot() +
   geom_point(data = stipe_density_module_year_areaucsb, aes(x = longitude, y = latitude, size = total_carbon)) +
   scale_size_continuous(name = "Total Carbon")
 
-#Original working code to try and plot carbon storage on each module
-singleyear2020data <- stipe_density_module_year_areaucsb %>%
-  filter(SampleYear == 2020)
-view(singleyear2020data)
-
-map_plot2020 <- map_plot +
-  geom_sf(data = singleyear2020data, aes(x = fill = "blue", color = "black", size = 0.2))
-
-map_plot2020
-
 # Create new data set of stipe_density_module_year_areaucsb
 stipe_density_module_year_area_2020 <- stipe_density_module_year_areaucsb %>%
   filter(SampleYear == 2020) %>%
@@ -242,7 +222,7 @@ stipe_density_module_year_2021 <- stipe_density_module_year_areaucsb %>%
   ungroup() %>%
   select(total_carbon_2021, Name)
 
-stipe_density_module_year_2021
+plot(stipe_density_module_year_2021)
 
 stipe_density_module_year_area_all_years <- left_join(stipe_density_module_year_area_all_years, stipe_density_module_year_2021, by = "Name")
 
@@ -282,25 +262,26 @@ plot(stipe_density_module_year_area_all_years, max.plot = 11)
 #Plot carbon storage values from 2020 onto a ggplot
 map_plot_2020 <- ggplot() +
   geom_sf(data = stipe_density_module_year_area_all_years, aes(fill = total_carbon_2020)) +
-  scale_fill_viridis_c(name = "Carbon\nStored (g)",  # Legend title
+  scale_fill_viridis_c(name = "Total Grams of Carbon \nStored in 2020",  # Legend title
                         limits = c(0, 700),  # Adjust limits as needed
                         breaks = seq(0, 700, by = 100),  # Example breaks
                         labels = scales::comma_format()) +
   theme_classic() +
-  theme(legend.position = "left",
-                legend.direction = "vertical",
-        legend.text = element_text(angle = 0, vjust = 0.7, size = 10, color = "black", face = "bold"),
-        legend.title = element_text(size = 19, face = "bold", color = "black"),
+  theme(legend.position = "bottom",
+                legend.direction = "horizontal",
+        legend.text = element_text(angle = 45, vjust = 0.7, size = 11, color = "black", face = "bold"),
+        legend.title = element_text(size = 12, face = "bold", color = "black"),
         axis.text = element_text(face = "bold", size = 13, color = "black"),
         guide_colorbar(frame.color = "black", ticks.color = "black"),
         panel.background = element_blank())
 
+plot(map_plot_2020)
 
-# change carbon scale:
+#Plot carbon storage values from 2021 onto a ggplot
 
 map_plot_2021 <- ggplot() +
   geom_sf(data = stipe_density_module_year_area_all_years, aes(fill = total_carbon_2021)) +
-  scale_fill_viridis_c(name = "Carbon Stored (g)",  # Legend title
+  scale_fill_viridis_c(name = "Total Grams of Carbon \nStored in 2021",  # Legend title
                       limits = c(0, 700),  # Adjust limits as needed
                       breaks = seq(0, 700, by = 100),  # Example breaks
                       labels = scales::comma_format())+
@@ -313,9 +294,9 @@ guide_colorbar(frame.color = "black", ticks.color = "black"),
 legend.title = element_text(size = 12, face = "bold", color = "black"),
 panel.background = element_blank())
 
-map_plot_2021
+plot(map_plot_2021)
 
-
+#Plot carbon storage values from 2022 onto a ggplot
 # Carbon storage range: 0 - 3000
 
 map_plot_2022 <- ggplot() +
@@ -334,8 +315,10 @@ map_plot_2022 <- ggplot() +
         panel.background = element_blank())
 
 
-map_plot_2022
+plot(map_plot_2022)
 
+
+#Plot carbon storage values from 2023 onto a ggplot
 
 map_plot_2023 <- ggplot() +
   geom_sf(data = stipe_density_module_year_area_all_years, aes(fill = total_carbon_2023)) +
@@ -359,25 +342,14 @@ map_plot_2023
 map_all_plots_2020_2023 <- plot_grid(map_plot_2020, map_plot_2021, map_plot_2022, map_plot_2023, ncol = 2) +
   theme(legend.position = "null")
 
+#Look at all plots
+map_all_plots_2020_2023
+
 # Extract the legend from one of the plots
 map_carbon_legend <- get_plot_component(map_plot_2020, 'guide-box', return_all = TRUE)[[2]]
 map_carbon_legend
 
 ggsave(map_carbon_legend, path = ("figures"), filename = "map_carbon_legend.jpg", width = 2, height = 2, units = "in", dpi = 300)
-
-
-
-map_all_plots_2020_2023
-
-combined_plot2 <- plot_grid(map_plot_2020 + theme_classic() + theme(legend.position = "none"),
-                           map_plot_2021 + theme_classic() + theme(legend.position = "none"),
-          map_plot_2022 + theme_classic() + theme(legend.position = "none"),
-          map_plot_2023 + theme_classic() + theme(legend.position = "none"))
-
-
-
-
-
 
 
 # Combine the plots without individual legends
@@ -416,19 +388,14 @@ combined_plot1 <- plot_grid(
     theme(legend.position = "none"),
   ncol = 2)
 
+#Save the plot
+ggsave(combined_plot1, path = ("figures"), filename = "combined_plot1.jpg", width = 15, height = 8.5, units = "in", dpi = 400)
 
 # Add the combined plot and the extracted legend into a final plot
 final_plot <- plot_grid(
   combined_plot1,
   ncol = 2, nrow = 1,
   rel_widths = c(9, 1)) # Adjust relative heights as needed
-
-
-ggsave(combined_plot1, path = ("figures"), filename = "combined_plot1.jpg", width = 15, height = 8.5, units = "in", dpi = 400)
-
-
-
-
 
 
 ggsave(final_plot, path = ("figures"), filename = "final_plot.jpg", width = plot_dimensions$width, height = plot_dimensions$height, units = "in", dpi = 300)
@@ -480,5 +447,3 @@ map_plot_2021 <- ggplot() +
 
 # Print the plot with dynamically adjusted dimensions
 ggsave(map_plot_2021, path = ("figures"), filename = "map_plot_2021.png", width = plot_dimensions$width, height = plot_dimensions$height, units = "in", dpi = 300) # Specify units
-
-
